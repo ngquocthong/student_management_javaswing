@@ -14,11 +14,7 @@ public class GWMS extends JFrame {
 
     private JTabbedPane tabbedPane1;
     private JPanel mainPanel;
-    private JTextField textField1;
     private JButton loginButton;
-    private JCheckBox rememberMeCheckBox;
-    private JButton forgotPasswordButton;
-    private JPasswordField passwordField1;
     private JTextField textField2;
     private JTextField txtName;
     private JButton addButton;
@@ -27,7 +23,7 @@ public class GWMS extends JFrame {
     private JComboBox comboBox1;
     private JComboBox comboBox2;
     private JTextField textField6;
-    private JButton button1;
+    private JButton findButton;
     private JTable table1;
     private JRadioButton maleRadioButton;
     private JRadioButton femaleRadioButton;
@@ -42,7 +38,6 @@ public class GWMS extends JFrame {
         super(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
-
         this.setLocationRelativeTo(null);
         this.setSize(600, 600); // replace setsize
         JPDate.add(dateChooser);
@@ -79,8 +74,6 @@ public class GWMS extends JFrame {
                 uncheck();
             }
         });
-
-
     }
 
     private void uncheck() {
@@ -105,12 +98,5 @@ public class GWMS extends JFrame {
         JOptionPane.showMessageDialog(this, msg);
     }
 
-    public static void main(String[] args) {
-        JFrame fr = new GWMS("Greenwich Manage model.Student");
-        fr.setResizable(false);
-        fr.setVisible(true);
-
-
-    }
 
 }
