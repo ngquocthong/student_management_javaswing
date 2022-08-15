@@ -1,31 +1,37 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
-public class Student {
-    private byte id, age;
+public class Student implements Serializable {
+    public static int numberOfStudent = 0;
+    private String id;
     private String name, email, className;
-    private Date dob;
+    List<String> clubs;
+    private String dob;
 
-    public Student() {
 
+    public Student()    {
+        numberOfStudent++;
     }
 
-    public Student(byte id, byte age, String name, String email, String className, Date dob) {
+    public Student(String name, String className) {
+        this.name = name;
+        this.className = className;
+        numberOfStudent++;
+    }
+
+    public Student(String id, String name, String className,String dob, List<String> clubs) {
         this.id = id;
-        this.age = age;
         this.name = name;
         this.email = email;
         this.className = className;
         this.dob = dob;
     }
 
-    public void setId(byte id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public void setAge(byte age) {
-        this.age = age;
     }
 
     public void setName(String name) {
@@ -40,16 +46,12 @@ public class Student {
         this.className = className;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(String dob) {
         this.dob = dob;
     }
 
-    public byte getId() {
+    public String getId() {
         return id;
-    }
-
-    public byte getAge() {
-        return age;
     }
 
     public String getName() {
@@ -64,7 +66,7 @@ public class Student {
         return className;
     }
 
-    public Date getDob() {
+    public String getDob() {
         return dob;
     }
 
@@ -72,7 +74,6 @@ public class Student {
     public String toString() {
         return "model.Student{" +
                 "id=" + id +
-                ", age=" + age +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", className='" + className + '\'' +

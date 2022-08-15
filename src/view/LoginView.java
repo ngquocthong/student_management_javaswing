@@ -32,9 +32,9 @@ public class LoginView extends JFrame{
                     boolean check = login.loginProcess(txtID.getText(), txtPass.getText(), true);
                     if (check) {
                         showMessage("Login Successfully");
-                        JFrame fr = new GWMS("Greenwich Manage model.Student");
-                        fr.setResizable(false);
-                        fr.setVisible(true);
+//                        JFrame fr = new GWMS("Greenwich Manage model.Student");
+//                        fr.setResizable(false);
+//                        fr.setVisible(true);
                     } else {
                         showMessage("Login Failed");
                     }

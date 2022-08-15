@@ -7,10 +7,9 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        JFrame loginPanel = new LoginView("Login GWMS");
-        loginPanel.setResizable(false);
-        loginPanel.setVisible(true);
-        loginPanel.pack();
+    JFrame fr = new GWMS("Greenwich Manage model.Student");
+    fr.setResizable(false);
+    fr.setVisible(true);
 
 
 
