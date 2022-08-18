@@ -121,9 +121,9 @@ public class XFile {
         // Add object
         String filePath = "testStudent.dat";
         List<Student> students = new ArrayList<>();
-        students.add(new Student("John", "GCC0902"));
-        students.add(new Student("Harley", "GCC0903"));
-        students.add(new Student("Jenny", "GCC0904"));
+//        students.add(new Student("John", "GCC0902"));
+//        students.add(new Student("Harley", "GCC0903"));
+//        students.add(new Student("Jenny", "GCC0904"));
         writeObject(filePath, students);
 
         List<Student> newLst = (List<Student>) readObject(filePath);

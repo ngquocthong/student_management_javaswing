@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="view.Grade">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="791" height="524"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="4f685" class="javax.swing.JTextField" binding="txtGrade">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="100" height="30"/>
+          </grid>
+        </constraints>
+        <properties>
+          <font name="JetBrains Mono" size="17"/>
+        </properties>
+      </component>
+      <component id="b6684" class="javax.swing.JComboBox" binding="cbSubject">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="30"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="12efd" class="javax.swing.JButton" binding="submitButton" default-binding="true">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="50" height="30"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-14196023"/>
+          <font name="JetBrains Mono" size="17"/>
+          <foreground color="-1"/>
+          <text value="Submit"/>
+        </properties>
+      </component>
+      <component id="d1438" class="javax.swing.JTable" binding="tbGrade">
+        <constraints>
+          <grid row="0" column="0" row-span="4" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="49c70" class="javax.swing.JLabel" binding="lblGrade_stName">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="JetBrains Mono" size="17"/>
+          <text value="Student's name"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

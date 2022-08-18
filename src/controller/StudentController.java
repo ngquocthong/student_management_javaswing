@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentController {
-    private static String fStudentPath = "CanTho/student.dat";
+    private static String fStudentPath = "students.dat";
     static List<Student> students = new ArrayList<>();
     public static void addToList(Student student) {
         students.add(student);
@@ -21,4 +21,7 @@ public class StudentController {
         }
     }
 
+    public static String getfStudentPath() {
+        return fStudentPath;
+    }
 }

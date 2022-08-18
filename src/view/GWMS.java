@@ -1,18 +1,25 @@
 package view;
 
-import com.toedter.calendar.JDateChooser;
 import controller.StudentController;
+import controller.SubjectController;
 import lib.XFile;
+import lib.XUtil;
 import model.Student;
+import model.Subject;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 
 public class GWMS extends JFrame {
 
@@ -27,7 +34,6 @@ public class GWMS extends JFrame {
     private JComboBox comboBox2;
     private JTextField textField6;
     private JButton findButton;
-    private JTable table1;
     private JRadioButton maleRadioButton;
     private JRadioButton femaleRadioButton;
     private JCheckBox ITCheckBox;
@@ -40,26 +46,66 @@ public class GWMS extends JFrame {
     private JLabel lblManageStudent;
     private JLabel lblManageClass;
     private JPanel contentSide;
-    private JPanel mStudentCard;
-    private JPanel homeCard;
+    private JPanel Student;
+    private JPanel Home;
     private JTextField textField1;
     private JEditorPane editorPane1;
     private JMenuItem openMenuItem;
     private JMenuItem saveMenuItem;
     private JMenuItem saveAsMenuItem;
     private JMenuItem newMenuItem;
+    private JComboBox comboBox3;
+    private JTable tbStudent;
+    private JDatePickerImpl JDatePickerImpl2;
+    private JPanel SubjectCard;
+    private JList lstSubjects;
+    private JButton addSubjectButton;
+    private JButton updateSubjectButton;
+    private JButton deleteSubjectButton;
+    private JTextField txtSubjectID;
+    private JTextField txtSubjectName;
+    private JLabel lblManageSubject;
+    private JButton gradeButton;
     CardLayout cardLayout;
-    JDateChooser dateChooser = new JDateChooser();
-    String fPath;
 
+    String fPath = "testStudent.dat";
+    DefaultTableModel modelTable;
+    List<Student> listStTable;
+
+    DefaultListModel modelSubjects;
+    List<Subject> listSubjects;
+    int row; // sự kiện người ta click vào trong table || trong giao diện
     public GWMS(String title) {
         super(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
+        this.setSize(1500, 800); // replace setsize
         this.setLocationRelativeTo(null);
-        this.setSize(800, 500); // replace setsize
+
+        listSubjects = new ArrayList<Subject>();
+        modelSubjects = new DefaultListModel();
+        syncSubjects();
+
+        tbStudent.setModel(new DefaultTableModel(
+                new Object[][] {},
+                new String[]{"ID", "Name", "Mail", "Gender", "Major", "BDay"
+                }
+                ));
+
+        modelTable = (DefaultTableModel) tbStudent.getModel();
+        listStTable = (List<Student>) XFile.readObject(fPath);
+        if(listStTable.size() == 0) {
+            //(String id, String name, String email, String className, Double spring, Double summer, Double fall, List<String> clubs, String dob4
+            List<String> clubs = new ArrayList<String>();
+            listStTable.add(new Student("001", "Thong", "@email.com", "GCC0902", clubs, "2022-01-01"));
+            XFile.writeObject(StudentController.getfStudentPath(), listStTable);
+        }
+        // fill list to JTable
+        fillToTable();
+        //show all to form
+        showDetail(row);
+
         cardLayout = (CardLayout) contentSide.getLayout();
-        JPDate.add(dateChooser);
         openMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -82,7 +128,7 @@ public class GWMS extends JFrame {
                 New();
             }
         });
-        addButton.addActionListener(new ActionListener() {
+        addButton.addActionListener(new ActionListener() { // Action Listener
             @Override
             public void actionPerformed(ActionEvent e) {
                 List<String> clubs = new ArrayList<String>();
@@ -95,14 +141,13 @@ public class GWMS extends JFrame {
                 } else {
                     gender = femaleRadioButton.getActionCommand();
                 }
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                String dayOfBirth = sdf.format(dateChooser.getDate());
+
                 if (ITCheckBox.isSelected()) clubs.add(ITCheckBox.getActionCommand());
                 if (artsCheckBox.isSelected()) clubs.add(artsCheckBox.getActionCommand());
                 if (businessCheckBox.isSelected()) clubs.add(businessCheckBox.getActionCommand());
                 if (eventCheckBox.isSelected()) clubs.add(eventCheckBox.getActionCommand());
-                Student student = new Student(id, name, className, dayOfBirth, clubs);
-                StudentController.addToList(student);
+                //Student student = new Student(id, name, className, dayOfBirth, clubs);
+                //StudentController.addToList(student);
 
                 //String msg = String.format("Successfully \n Added model.Student:%s; Gender:%s; Attented class: %s Date Birth: %s", txtName.getText(), gender, clubs, dayOfBirth);
                 //showMessage(msg);
@@ -122,16 +167,6 @@ public class GWMS extends JFrame {
                 cardLayout.show(contentSide,"HomeCard");
             }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                super.mouseExited(e);
-            }
-        });
-        lblManageStudent.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                cardLayout.show(contentSide,"ManageStudentCard");
-            }
         });
         lblHome.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -139,12 +174,17 @@ public class GWMS extends JFrame {
                 lblMoved(lblHome);
             }
         });
-        lblHome.addMouseMotionListener(new MouseMotionAdapter() {
-        });
         lblHome.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 lblExited(lblHome);
+            }
+        });
+
+        lblManageStudent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(contentSide,"ManageStudentCard");
             }
         });
         lblManageStudent.addMouseMotionListener(new MouseMotionAdapter() {
@@ -159,12 +199,123 @@ public class GWMS extends JFrame {
                 lblExited(lblManageStudent);
             }
         });
-        addButton.addActionListener(new ActionListener() {
+
+
+        lblManageClass.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void mouseMoved(MouseEvent e) {
+                lblMoved(lblManageClass);
+            }
+        });
+
+        lblManageClass.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
 
             }
         });
+        lblManageClass.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                lblExited(lblManageClass);
+            }
+        });
+        lblManageSubject.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(contentSide,"SubjectCard");
+            }
+        });
+        addSubjectButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Subject newSubject = new Subject(txtSubjectID.getText(), txtSubjectName.getText());
+                modelSubjects.addElement(newSubject.toString());
+                listSubjects.add(newSubject);
+                SubjectController.addSubject(listSubjects);
+            }
+        });
+        lstSubjects.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int index = lstSubjects.getSelectedIndex();
+                txtSubjectID.setText(listSubjects.get(index).getID());
+                txtSubjectName.setText(listSubjects.get(index).getName());
+            }
+        });
+        updateSubjectButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = lstSubjects.getSelectedIndex();
+                if (index != -1) {
+                    listSubjects.get(index).setName(txtSubjectName.getText());
+                    listSubjects.get(index).setID(txtSubjectID.getText());
+                    SubjectController.updateSubject(listSubjects);
+                    syncSubjects();
+                } else {
+                    showMessage("Please choose a subject");
+                }
+            }
+        });
+        deleteSubjectButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = lstSubjects.getSelectedIndex();
+                if (index != -1) {
+                    listSubjects.remove(index);
+                    SubjectController.updateSubject(listSubjects);
+                    syncSubjects();
+                } else {
+                    showMessage("Please choose a subject");
+                }
+            }
+        });
+        gradeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JFrame fr = new Grade("Grade", 0, (String) tbStudent.getValueAt(row, 1));
+                fr.setVisible(true);
+            }
+        });
+    }
+
+    private void syncSubjects() {
+        listSubjects.clear();
+        modelSubjects.removeAllElements();
+        for (Subject sub : SubjectController.loadSubjects()) {
+            listSubjects.add(sub);
+            modelSubjects.addElement(sub.toString());
+        }
+        lstSubjects.setModel(modelSubjects);
+    }
+
+
+    private void fillToTable() {
+        modelTable.setRowCount(0);
+        //(String id, String name, String email, String className, Double spring, Double summer, Double fall, List<String> clubs, String dob4
+        for (Student s: listStTable) {
+            Object[] row = new Object[] {
+                    s.getId(), s.getName(), s.getEmail(), s.getClassName(),
+                    s.getClubs(), XUtil.convertDateToString(s.getDob())
+            };
+            modelTable.addRow(row);
+        }
+
+    }
+    private void showDetail(int row) {
+        String sID = (String) tbStudent.getValueAt(row, 0);
+        txtID.setText(sID);
+        String name = (String) tbStudent.getValueAt(row, 1);
+        txtName.setText(name);
+        Boolean gender = true;//(Boolean) tbStudent.getValueAt(row, true);
+        maleRadioButton.setSelected(!gender);
+        femaleRadioButton.setSelected(gender);
+        String bDay = (String) tbStudent.getValueAt(row, 5);
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(XUtil.convertStringToDate(bDay));
+        JDatePickerImpl2.getJFormattedTextField().setValue(c);
+
     }
 
     private void uncheck() {
@@ -198,7 +349,7 @@ public class GWMS extends JFrame {
     }
     private void lblExited(JLabel label) {
         Color fore = new Color(0, 0, 0);
-        Color bg = new Color(250, 248, 248);
+        Color bg = new Color(255, 255, 255);
         label.setForeground(fore);
         label.setBackground(bg);
         label.setOpaque(true);
@@ -240,4 +391,13 @@ public class GWMS extends JFrame {
         editorPane1.setText("");
     }
 
+    private void createUIComponents() {
+        UtilDateModel model = new UtilDateModel();
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        JDatePickerImpl2 = new JDatePickerImpl(datePanel, new DateLabelFormat());
+    }
 }
