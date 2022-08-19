@@ -59,6 +59,14 @@ public class MajorView extends JFrame{
                 MajorController.setToTextField(txtIDMajor, txtNameMajor, majorIndex);
             }
         });
+        deleteButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int majorIndex = listMajorView.getSelectedIndex();
+                MajorController.deleteMajor(majorIndex);
+                MajorController.syncMajor(listMajorView);
+            }
+        });
     }
 
 }

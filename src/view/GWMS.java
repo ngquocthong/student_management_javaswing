@@ -237,7 +237,7 @@ public class GWMS extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int indexMajor = majorCombo.getSelectedIndex();
                 SubjectController.addSubject(txtSubjectID.getText(),txtSubjectName.getText(), indexMajor);
-                SubjectController.setSubjects(listSubjectsView, indexMajor); // CAP NHAT LAI BAN
+                SubjectController.setSubjects(listSubjectsView, indexMajor); // CAP NHAT LAI list subject
             }
         });
         listSubjectsView.addMouseListener(new MouseAdapter() {
@@ -250,28 +250,26 @@ public class GWMS extends JFrame {
         updateSubjectButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-//                int index = listSubjectsView.getSelectedIndex();
-//                if (index != -1) {
-//                    listSubjects.get(index).setName(txtSubjectName.getText());
-//                    listSubjects.get(index).setID(txtSubjectID.getText());
-//                    SubjectController.updateSubject(listSubjects);
-//                    syncSubjects();
-//                } else {
-//                    showMessage("Please choose a subject");
-//                }
+                int indexSubject = listSubjectsView.getSelectedIndex();
+                if (indexSubject != -1) {
+                    SubjectController.updateSubject(txtSubjectID.getText(), txtSubjectName.getText(), indexMajor, indexSubject);
+                    SubjectController.setSubjects(listSubjectsView, indexMajor);
+                } else {
+                    showMessage("Please choose a subject");
+                }
             }
         });
         deleteSubjectButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-//                int index = listSubjectsView.getSelectedIndex();
-//                if (index != -1) {
-//                    listSubjects.remove(index);
-//                    SubjectController.updateSubject(listSubjects);
-//                    syncSubjects();
-//                } else {
-//                    showMessage("Please choose a subject");
-//                }
+                int indexSubject = listSubjectsView.getSelectedIndex();
+
+                if (indexSubject != -1) {
+                    SubjectController.deleteSubject(indexMajor, indexSubject);
+                    SubjectController.setSubjects(listSubjectsView, indexMajor);
+                } else {
+                    showMessage("Please choose a subject");
+                }
             }
         });
         gradeButton.addMouseListener(new MouseAdapter() {

@@ -100,4 +100,9 @@ public class MajorController {
     public static List<Major> getAllFile() {
         return (List<Major>) XFile.readObject(fMajorPath);
     }
+
+    public static void deleteMajor(int majorIndex) {
+        listMajors.remove(majorIndex);
+        XFile.writeObject(fMajorPath, listMajors);
+    }
 }

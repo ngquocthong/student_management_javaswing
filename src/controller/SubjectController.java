@@ -29,8 +29,13 @@ public class SubjectController {
     }
 
 
-    public static void updateSubject(List<Subject> subjects) {
-        XFile.writeObject("fSubjectPath.txt", subjects);
+    public static void updateSubject(String ID, String name, int indexMajor, int indexSubject) {
+        subjectsList.get(indexSubject).setID(ID);
+        subjectsList.get(indexSubject).setName(name);
+        // LAY HET DU LIEU CUA MAJOR
+        List<Major> majors = MajorController.getAllFile();
+        majors.get(indexMajor).setSubjects(subjectsList); // GHI ĐÈ VAO LIST SUBJECT TRONG MAJOR OBJECT
+        XFile.writeObject(MajorController.getfMajorPath(), majors);
     }
     
     public static void main(String[] args) {
@@ -68,7 +73,14 @@ public class SubjectController {
         List<Major> majors = MajorController.getAllFile();
         majors.get(indexMajor).setSubjects(subjectsList); // GHI ĐÈ VAO LIST SUBJECT TRONG MAJOR OBJECT
         XFile.writeObject(MajorController.getfMajorPath(), majors);
-        // THEM OBJECT VAO
+
 
     }
+
+    public static void deleteSubject(int indexMajor, int indexSubject) {
+        subjectsList.remove(indexSubject);
+        List<Major> majors = MajorController.getAllFile();
+        majors.get(indexMajor).setSubjects(subjectsList); // GHI ĐÈ VAO LIST SUBJECT TRONG MAJOR OBJECT
+        XFile.writeObject(MajorController.getfMajorPath(), majors);
+       }
 }
