@@ -50,7 +50,6 @@ public class GWMS extends JFrame {
     private JPanel contentSide;
     private JPanel Student;
     private JPanel Home;
-    private JTextField textField1;
     private JEditorPane editorPane1;
     private JMenuItem openMenuItem;
     private JMenuItem saveMenuItem;
@@ -70,6 +69,7 @@ public class GWMS extends JFrame {
     private JButton gradeButton;
     private JComboBox majorCombo;
     private JButton modifyMajorButton;
+    public JLabel stateLabel; // TẠI SAO KHÔNG CHO ĐẶT BIẾN LÀ STATIC ????
     CardLayout cardLayout;
 
     DefaultComboBoxModel modelComboMajor;
@@ -90,25 +90,13 @@ public class GWMS extends JFrame {
         this.setSize(1500, 800);
         this.setLocationRelativeTo(null);
 
-//        listMajors = (List<Major>) XFile.readObject(MajorController.getfMajorPath()); // LIST CÁC NGÀNH
-//        listSubjects = listMajors.get(0).getSubjects(); // LIST CÁC MÔN TRONG NGÀNH
-
-
+        //KHỞI TẠO GIÁ TRỊ CHO CÁC COMPONENTS
         MajorController.setComboBox(majorCombo);
         SubjectController.setSubjects(listSubjectsView, 0);
 
+        StudentController.setTable(tbStudent);
 
-
-//        modelSubjects = new DefaultListModel();
-//        syncSubjects();
-
-
-
-        tbStudent.setModel(new DefaultTableModel(
-                new Object[][] {},
-                new String[]{"ID", "Name", "Mail", "Gender", "Major", "BDay"
-                }
-                ));
+        // SỰ KIỆN
 
         modelTable = (DefaultTableModel) tbStudent.getModel();
         listStTable = (List<Student>) XFile.readObject(fPath);
@@ -247,18 +235,16 @@ public class GWMS extends JFrame {
         addSubjectButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-//                Subject newSubject = new Subject(txtSubjectID.getText(), txtSubjectName.getText());
-//                modelSubjects.addElement(newSubject.toString());
-//                listSubjects.add(newSubject);
-//                SubjectController.addSubject(listSubjects);
+                int indexMajor = majorCombo.getSelectedIndex();
+                SubjectController.addSubject(txtSubjectID.getText(),txtSubjectName.getText(), indexMajor);
+                SubjectController.setSubjects(listSubjectsView, indexMajor); // CAP NHAT LAI BAN
             }
         });
         listSubjectsView.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-//                int index = listSubjectsView.getSelectedIndex();
-//                txtSubjectID.setText(listSubjects.get(index).getID());
-//                txtSubjectName.setText(listSubjects.get(index).getName());
+                int indexSubject = listSubjectsView.getSelectedIndex();
+                SubjectController.setToTextField(txtSubjectID, txtSubjectName, indexSubject);
             }
         });
         updateSubjectButton.addMouseListener(new MouseAdapter() {
@@ -435,4 +421,5 @@ public class GWMS extends JFrame {
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         JDatePickerImpl2 = new JDatePickerImpl(datePanel, new DateLabelFormat());
     }
+
 }

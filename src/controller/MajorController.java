@@ -92,4 +92,12 @@ public class MajorController {
         txtIDMajor.setText(listMajors.get(majorIndex).getID());
         txtNameMajor.setText(listMajors.get(majorIndex).getName());
     }
+
+    public static List<Major> getListMajors() {
+        return listMajors;
+    }
+
+    public static List<Major> getAllFile() {
+        return (List<Major>) XFile.readObject(fMajorPath);
+    }
 }

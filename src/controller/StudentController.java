@@ -3,6 +3,8 @@ package controller;
 import lib.XFile;
 import model.Student;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,5 +25,13 @@ public class StudentController {
 
     public static String getfStudentPath() {
         return fStudentPath;
+    }
+
+    public static void setTable(JTable tbStudent) {
+        tbStudent.setModel(new DefaultTableModel(
+                new Object[][] {},
+                new String[]{"ID", "Name", "Mail", "Gender", "Major", "BDay"
+                }
+        ));
     }
 }
