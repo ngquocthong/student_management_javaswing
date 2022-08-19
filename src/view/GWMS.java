@@ -1,9 +1,11 @@
 package view;
 
+import controller.MajorController;
 import controller.StudentController;
 import controller.SubjectController;
 import lib.XFile;
 import lib.XUtil;
+import model.Major;
 import model.Student;
 import model.Subject;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -58,7 +60,7 @@ public class GWMS extends JFrame {
     private JTable tbStudent;
     private JDatePickerImpl JDatePickerImpl2;
     private JPanel SubjectCard;
-    private JList lstSubjects;
+    private JList listSubjectsView;
     private JButton addSubjectButton;
     private JButton updateSubjectButton;
     private JButton deleteSubjectButton;
@@ -66,25 +68,41 @@ public class GWMS extends JFrame {
     private JTextField txtSubjectName;
     private JLabel lblManageSubject;
     private JButton gradeButton;
+    private JComboBox majorCombo;
+    private JButton modifyMajorButton;
     CardLayout cardLayout;
 
+    DefaultComboBoxModel modelComboMajor;
     String fPath = "testStudent.dat";
     DefaultTableModel modelTable;
     List<Student> listStTable;
+    List<Major> listMajors;
 
     DefaultListModel modelSubjects;
     List<Subject> listSubjects;
+
     int row; // sự kiện người ta click vào trong table || trong giao diện
+    int indexMajor = 0;
     public GWMS(String title) {
         super(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
-        this.setSize(1500, 800); // replace setsize
+        this.setSize(1500, 800);
         this.setLocationRelativeTo(null);
 
-        listSubjects = new ArrayList<Subject>();
-        modelSubjects = new DefaultListModel();
-        syncSubjects();
+//        listMajors = (List<Major>) XFile.readObject(MajorController.getfMajorPath()); // LIST CÁC NGÀNH
+//        listSubjects = listMajors.get(0).getSubjects(); // LIST CÁC MÔN TRONG NGÀNH
+
+
+        MajorController.setComboBox(majorCombo);
+        SubjectController.setSubjects(listSubjectsView, 0);
+
+
+
+//        modelSubjects = new DefaultListModel();
+//        syncSubjects();
+
+
 
         tbStudent.setModel(new DefaultTableModel(
                 new Object[][] {},
@@ -229,64 +247,79 @@ public class GWMS extends JFrame {
         addSubjectButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Subject newSubject = new Subject(txtSubjectID.getText(), txtSubjectName.getText());
-                modelSubjects.addElement(newSubject.toString());
-                listSubjects.add(newSubject);
-                SubjectController.addSubject(listSubjects);
+//                Subject newSubject = new Subject(txtSubjectID.getText(), txtSubjectName.getText());
+//                modelSubjects.addElement(newSubject.toString());
+//                listSubjects.add(newSubject);
+//                SubjectController.addSubject(listSubjects);
             }
         });
-        lstSubjects.addMouseListener(new MouseAdapter() {
+        listSubjectsView.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int index = lstSubjects.getSelectedIndex();
-                txtSubjectID.setText(listSubjects.get(index).getID());
-                txtSubjectName.setText(listSubjects.get(index).getName());
+//                int index = listSubjectsView.getSelectedIndex();
+//                txtSubjectID.setText(listSubjects.get(index).getID());
+//                txtSubjectName.setText(listSubjects.get(index).getName());
             }
         });
         updateSubjectButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int index = lstSubjects.getSelectedIndex();
-                if (index != -1) {
-                    listSubjects.get(index).setName(txtSubjectName.getText());
-                    listSubjects.get(index).setID(txtSubjectID.getText());
-                    SubjectController.updateSubject(listSubjects);
-                    syncSubjects();
-                } else {
-                    showMessage("Please choose a subject");
-                }
+//                int index = listSubjectsView.getSelectedIndex();
+//                if (index != -1) {
+//                    listSubjects.get(index).setName(txtSubjectName.getText());
+//                    listSubjects.get(index).setID(txtSubjectID.getText());
+//                    SubjectController.updateSubject(listSubjects);
+//                    syncSubjects();
+//                } else {
+//                    showMessage("Please choose a subject");
+//                }
             }
         });
         deleteSubjectButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int index = lstSubjects.getSelectedIndex();
-                if (index != -1) {
-                    listSubjects.remove(index);
-                    SubjectController.updateSubject(listSubjects);
-                    syncSubjects();
-                } else {
-                    showMessage("Please choose a subject");
-                }
+//                int index = listSubjectsView.getSelectedIndex();
+//                if (index != -1) {
+//                    listSubjects.remove(index);
+//                    SubjectController.updateSubject(listSubjects);
+//                    syncSubjects();
+//                } else {
+//                    showMessage("Please choose a subject");
+//                }
             }
         });
         gradeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JFrame fr = new Grade("Grade", 0, (String) tbStudent.getValueAt(row, 1));
+                JFrame fr = new GradeView("Grade", 0, (String) tbStudent.getValueAt(row, 1));
                 fr.setVisible(true);
+            }
+        });
+        modifyMajorButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //GO to Major Panel
+                JFrame fr = new MajorView("Major");
+                fr.setVisible(true);
+            }
+        });
+        majorCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                indexMajor = majorCombo.getSelectedIndex();
+                SubjectController.setSubjects(listSubjectsView, indexMajor);
             }
         });
     }
 
     private void syncSubjects() {
-        listSubjects.clear();
+        //listSubjects.clear();
         modelSubjects.removeAllElements();
-        for (Subject sub : SubjectController.loadSubjects()) {
+        for (Subject sub : SubjectController.loadSubjects(indexMajor)) {
             listSubjects.add(sub);
             modelSubjects.addElement(sub.toString());
         }
-        lstSubjects.setModel(modelSubjects);
+        listSubjectsView.setModel(modelSubjects);
     }
 
 
@@ -390,6 +423,8 @@ public class GWMS extends JFrame {
         fPath = null;
         editorPane1.setText("");
     }
+
+
 
     private void createUIComponents() {
         UtilDateModel model = new UtilDateModel();

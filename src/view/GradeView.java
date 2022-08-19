@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Grade extends JFrame {
+public class GradeView extends JFrame {
     private JComboBox cbSubject;
     private JTextField txtGrade;
     private JButton submitButton;
@@ -19,7 +19,7 @@ public class Grade extends JFrame {
     DefaultTableModel modelTable;
 
     private int index;
-    public Grade(String title, int index, String studentName) {
+    public GradeView(String title, int indexStudent, String studentName) {
         super(title);
         this.index = index;
         this.setContentPane(mainPanel);
@@ -29,7 +29,7 @@ public class Grade extends JFrame {
         lblGrade_stName.setText(studentName);
 
         modelCombo = (DefaultComboBoxModel) cbSubject.getModel();
-        modelCombo.addAll( SubjectController.loadSubjects());
+        modelCombo.addAll( SubjectController.loadSubjects(0));
         tbGrade.setModel(new DefaultTableModel(
                 new Object[][] {},
                 new String[]{"ID", "Subject", "Grade"
@@ -40,7 +40,8 @@ public class Grade extends JFrame {
         submitButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                GradeController.gradeStudent(5.6, index);
+                int indexSubject = 0; // getSelectedIndex;
+                GradeController.gradeStudent(5.6, indexStudent, indexSubject);
             }
         });
     }

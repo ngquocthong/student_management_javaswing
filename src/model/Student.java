@@ -27,7 +27,7 @@ public class Student implements Serializable {
         this.clubs = clubs;
         this.major = "IT";
         subjects = new ArrayList<>();
-        for(Subject subject : SubjectController.loadSubjects()) {
+        for(Subject subject : SubjectController.loadSubjects(0)) {
             subjects.add(subject);
         }
         this.dob = XUtil.convertStringToDate(dob);
