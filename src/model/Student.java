@@ -10,42 +10,65 @@ import java.util.List;
 
 public class Student implements Serializable {
     private String id;
-    private String name, email, className, major;
-    private List<Subject> subjects;
+    private String name, email;
+    private String className;
+    private Major major;
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", className='" + className + '\'' +
+                ", major=" + major +
+                ", clubs=" + clubs +
+                ", dob=" + dob +
+                ", gender=" + gender +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
+
     List<String> clubs;
     private Date dob;
+    private Boolean gender;
+    private String imageUrl;
 
 
     public Student()    {
     }
 
-    public Student(String id, String name, String email, String className, List<String> clubs, String dob) {
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public void setMajor(Major major) {
+        this.major = major;
+    }
+
+    public void setGender(Boolean gender) {
+        this.gender = gender;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Boolean getGender() {
+        return gender;
+    }
+
+
+    public Student(String id, String name, String email, Major major, List<String> clubs, String dob, String imageUrl, String className, Boolean gender) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.className = className;
         this.clubs = clubs;
-        this.major = "IT";
-        subjects = new ArrayList<>();
-        for(Subject subject : SubjectController.loadSubjects(0)) {
-            subjects.add(subject);
-        }
+        this.imageUrl = imageUrl;
+        this.major = major;
         this.dob = XUtil.convertStringToDate(dob);
-
-    }
-//All setter and getter
-
-    public void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
-    }
-
-    public List<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public Student(String name, String className) {
-        this.name = name;
-        this.className = className;
+        this.gender = gender;
     }
 
 
@@ -62,13 +85,7 @@ public class Student implements Serializable {
         this.email = email;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
-    }
 
-    public void setMajor(String major) {
-        this.major = major;
-    }
 
 
     public void setClubs(List<String> clubs) {
@@ -96,7 +113,11 @@ public class Student implements Serializable {
         return className;
     }
 
-    public String getMajor() {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public Major getMajor() {
         return major;
     }
 

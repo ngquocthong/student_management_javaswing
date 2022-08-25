@@ -12,6 +12,12 @@ public class Subject implements Serializable {
         this.grade = 0.0;
     }
 
+    public Subject(String ID, String name, Double grade) {
+        this.ID = ID;
+        this.name = name;
+        this.grade = grade;
+    }
+
     public Subject() {
 
     }

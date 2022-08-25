@@ -24,9 +24,13 @@ public class LoginView extends JFrame{
         LOGINButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String user = txtID.getText();
                     boolean check = LoginController.loginProcess(txtID.getText(), txtPassword.getText(), cmbRole.getSelectedIndex());
                     if (check) {
-                        showMessage("Login Successfully");
+                        setVisible(false);
+                        JFrame fr = new GWMS("Greenwich Management Student", cmbRole.getSelectedItem().toString() + ": " + user);
+                        fr.setResizable(false);
+                        fr.setVisible(true);
                     } else {
                         showMessage("Login Failed");
                     }

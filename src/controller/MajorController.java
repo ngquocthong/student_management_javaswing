@@ -12,7 +12,7 @@ public class MajorController {
     private static DefaultComboBoxModel modelComboMajor;
     private static DefaultListModel modelMajorsList = new DefaultListModel();
     private static String fMajorPath = "majors.dat";
-    private static List<Major> listMajors = (List<Major>) XFile.readObject(MajorController.getfMajorPath());
+    private static List<Major> listMajors;
 
     public static String getfMajorPath() {
         return fMajorPath;
@@ -56,6 +56,7 @@ public class MajorController {
 
     public static void setComboBox(JComboBox majorCombo) {
         //listSubjects = listMajors.get(0).getSubjects(); // LIST CÁC MÔN TRONG NGÀNH | DEFAULT IS  0
+        readAllMajor();
         modelComboMajor = (DefaultComboBoxModel) majorCombo.getModel();
             for (Major m: listMajors) {
                 modelComboMajor.addElement(m.getName());
@@ -105,4 +106,11 @@ public class MajorController {
         listMajors.remove(majorIndex);
         XFile.writeObject(fMajorPath, listMajors);
     }
+
+    public static List<Major> readAllMajor() {
+        listMajors = (List<Major>) XFile.readObject(fMajorPath);
+        return listMajors;
+    }
+
+
 }

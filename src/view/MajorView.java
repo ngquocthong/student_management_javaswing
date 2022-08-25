@@ -11,7 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class MajorView extends JFrame{
+public class MajorView extends JFrame {
     private JPanel majorJPane;
     private JTextField txtIDMajor;
     private JTextField txtNameMajor;
@@ -26,7 +26,7 @@ public class MajorView extends JFrame{
     public MajorView(String title) {
         super(title);
         this.setContentPane(majorJPane);
-        this.setSize(600,300);
+        this.setSize(600, 300);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,6 +67,7 @@ public class MajorView extends JFrame{
                 MajorController.syncMajor(listMajorView);
             }
         });
-    }
 
+
+    }
 }

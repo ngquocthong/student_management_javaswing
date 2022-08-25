@@ -17,10 +17,13 @@ public class SubjectController {
     private static List<Major> majorsList;
     private static List<Subject> subjectsList;
 
-    public static List<Subject> loadSubjects(int index) {
+    public SubjectController() {
+
+    }
+
+    public static List<Subject> loadSubjects(Major major) {
         try {
-            List<Major> majors = (List<Major>) XFile.readObject(MajorController.getfMajorPath());
-            List<Subject> subjects = majors.get(index).getSubjects();
+            List<Subject> subjects = major.getSubjects();
             return subjects;
         } catch (Exception e) {
             System.out.println("Error loading subjects");
@@ -67,6 +70,9 @@ public class SubjectController {
     }
 
     public static void addSubject(String ID, String name, int indexMajor) {
+        if(subjectsList == null) {
+            subjectsList = new ArrayList<Subject>();
+        }
         Subject newSubject = new Subject(ID, name);
         subjectsList.add(newSubject);
         // LAY HET DU LIEU CUA MAJOR
